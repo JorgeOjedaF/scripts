@@ -1,2 +1,2 @@
-$SerialNumber = (Get-WmiObject -class win32_bios). SerialNumber.
+$SerialNumber = (Get-WmiObject -class win32_bios).SerialNumber.replace(' ','-').substring(0, 15)
 Rename-Computer -NewName $SerialNumber -Force -Restart
