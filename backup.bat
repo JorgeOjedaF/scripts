@@ -8,5 +8,5 @@ REM 4) Se escribe la hora en el archivo de log
 
 ECHO %date% %time% - Inicio >> C:\respaldo.log
 IF NOT EXIST C:\CARPETA_RESPALDO\NUL MKDIR C:\CARPETA_RESPALDO\
-xcopy C:\Windows\system32\drivers\etc C:\CARPETA_RESPALDO\ /c /e /h /i /k /q /r /s /x /y >> C:\respaldo.log
+xcopy C:\Windows\system32\drivers\etc\ C:\CARPETA_RESPALDO\* /c /e /h /i /k /q /r /s /x /y >> C:\respaldo.log
 ECHO %date% %time% - Fin >> C:\respaldo.log
