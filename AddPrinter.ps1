@@ -7,3 +7,6 @@ Add-Printer -Name "mxdw 2" -DriverName "Microsoft XPS Document Writer v4" -PortN
 # Another Example
 # This command adds a printer by specifying the name of a print server and a shared printer on that server.
 # Add-Printer -ConnectionName \\printServer\printerName
+
+# Remove printer
+# Remove-Printer -Name “mxdw 2”
