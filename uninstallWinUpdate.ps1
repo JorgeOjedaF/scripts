@@ -1,5 +1,5 @@
-# It is recommended to test the script on a local machine for its purpose and effects. 
-# Faronics will not be responsible for any 
-# damage or loss to the data, operating system or setup based on the effects of the script.
+# Este script recibe un parametro que es el numero de KB (solo el numero sin el prefijo KB)
+# Por ejemplo si el parametro es "890830", el comando que se ejecutaria en la pc seria:
+# wusa /uninstall /kb:890830 /forcerestart
 
-wusa /uninstall /kb:890830 /forcerestart
+wusa /uninstall /kb:$args[0] /forcerestart
