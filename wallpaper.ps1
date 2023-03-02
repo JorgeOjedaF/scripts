@@ -1,5 +1,5 @@
 # ruta de la imagen a usar como fondo de pantalla
-$ImagePath = "C:\Images\img1.jpg"
+$ImagePath = "C:\Windows\Web\Wallpaper\img1.jpg"
 
 # Informacion del fondo de escritorio del registro del usuario 
 $RegistryPath = "HKCU:\Control Panel\Desktop"
