@@ -1,5 +1,5 @@
 # Ruta de la imagen del fondo de pantalla
-$imagenFondo = "C:\wallpaper\img1.jpg"
+$imagenFondo = "C:\wallpaper\img2.jpg"
 
 # Obtener la ubicación del archivo de configuración de temas de Windows
 $rutaConfiguracion = "$env:APPDATA\Microsoft\Windows\Themes\TranscodedWallpaper"
@@ -14,3 +14,6 @@ if ($temasService.Status -eq 'Running') {
 } else {
     Start-Service -Name Themes
 }
+
+#reinicia la computadora
+Restart-Computer -Force
