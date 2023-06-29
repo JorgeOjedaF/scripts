@@ -10,3 +10,5 @@ Set-ItemProperty -Path $RegistryPath -Name WallPaper -Value $ImagePath
 
 # Refresca para que tome los cambios
 RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters
+#reinicia la computadora
+Restart-Computer
