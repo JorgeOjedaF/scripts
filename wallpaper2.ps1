@@ -1,12 +1,16 @@
-# ruta de la imagen a usar como fondo de pantalla
-$ImagePath = "C:\Windows\Web\Wallpaper\Theme1\img2.jpg"
+# Ruta de la imagen del fondo de pantalla
+$imagenFondo = "C:\wallpaper\img1.jpg"
 
-# Informacion del fondo de escritorio del registro del usuario 
-$RegistryPath = "HKCU:\Control Panel\Desktop"
-$WallpaperValue = Get-ItemProperty -Path $RegistryPath -Name WallPaper
+# Obtener la ubicación del archivo de configuración de temas de Windows
+$rutaConfiguracion = "$env:APPDATA\Microsoft\Windows\Themes\TranscodedWallpaper"
 
-# Cambia el wallpaper al cambiar el registro de windows
-Set-ItemProperty -Path $RegistryPath -Name WallPaper -Value $ImagePath
+# Copiar la imagen del fondo de pantalla a la ubicación del archivo de configuración
+Copy-Item -Path $imagenFondo -Destination $rutaConfiguracion -Force
 
-# Refresca para que tome los cambios
-RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters
+# Reiniciar el servicio de Temas de Windows para aplicar los cambios
+$temasService = Get-Service -Name Themes
+if ($temasService.Status -eq 'Running') {
+    Restart-Service -Name Themes -Force
+} else {
+    Start-Service -Name Themes
+}
