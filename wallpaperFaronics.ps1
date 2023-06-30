@@ -1,5 +1,5 @@
 md c:\wallpaper
-Invoke-WebRequest 'https://github.com/JorgeOjedaF/install/blob/6314a2f8394749ef9e32d2f4cfe2fcce89427308/faronics.jpg' -Outfile 'C:\wallpaper\background.png'
+Invoke-WebRequest 'https://raw.githubusercontent.com/JorgeOjedaF/install/6314a2f8394749ef9e32d2f4cfe2fcce89427308/faronics.jpg' -Outfile 'C:\wallpaper\background.png'
 ping localhost -n 5
 Function Set-WallPaper {
  
