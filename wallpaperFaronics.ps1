@@ -1,6 +1,6 @@
 md c:\wallpaper
-Invoke-WebRequest 'https://raw.githubusercontent.com/JorgeOjedaF/install/6314a2f8394749ef9e32d2f4cfe2fcce89427308/faronics.jpg' -Outfile 'C:\wallpaper\background.png'
-ping localhost -n 5
+Invoke-WebRequest 'https://raw.githubusercontent.com/JorgeOjedaF/install/6314a2f8394749ef9e32d2f4cfe2fcce89427308/faronics.jpg' -Outfile 'C:\wallpaper\background.jpg'
+#ping localhost -n 5
 Function Set-WallPaper {
  
 <#
@@ -76,5 +76,5 @@ public class Params
   
     $ret = [Params]::SystemParametersInfo($SPI_SETDESKWALLPAPER, 0, $Image, $fWinIni)
 }
-ping localhost -n 5
-Set-WallPaper -Image "C:\Wallpaper\background.png" -Style Fit
+#ping localhost -n 5
+Set-WallPaper -Image "C:\Wallpaper\background.jpg" -Style Fit
