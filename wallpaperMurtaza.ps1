@@ -1,3 +1,5 @@
+#https://github.com/murtaza7869/Deploy/blob/master/Einstein-Branded-CustomWallpaper.ps1
+
 # How to use this script
 # AddWallpaperOptions.ps1 -Position <Tile/Center/Stretch/Fit/Fill> 
 #                         -Action   <DisableWallpaper/NewWallpaper> 
