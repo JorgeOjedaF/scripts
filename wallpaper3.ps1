@@ -21,4 +21,4 @@ $SPIF_SENDCHANGE = 0x02
 [Wallpaper]::SystemParametersInfo($SPI_SETDESKWALLPAPER, 0, $imagenFondo, $SPIF_UPDATEINIFILE -bor $SPIF_SENDCHANGE)
 
 #reinicia la computadora
-Restart-Computer -Force
+#Restart-Computer -Force
