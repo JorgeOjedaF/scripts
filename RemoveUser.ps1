@@ -1,1 +1,1 @@
-Remove-LocalUser -Name "Felipe"
+Remove-LocalUser -Name $args[0]
