@@ -3,7 +3,7 @@ Set-ItemProperty -Path "HKCU:\Control Panel\Desktop\" -Name Wallpaper -Value "C:
 
 Start-Sleep -s 10
 
-Get-ItemProperty "HKCU:\Control Panel\Desktop\Wallpaper"
+Get-ItemProperty -Path "HKCU:\Control Panel\Desktop\" -Name Wallpaper
 
 #reinicia la computadora para que tome efecto
 Restart-Computer -Force
