@@ -6,6 +6,9 @@ If(!(test-path -PathType container "C:\wallpaper"))
 #descarga la imagen a la carpeta wallpaper
 Invoke-WebRequest -Uri https://raw.githubusercontent.com/JorgeOjedaF/install/main/vancouver.jpg -OutFile C:\wallpaper\vancouver.jpg;
 
+#espera 20 segds
+Start-Sleep -s 20
+
 #cambia el wallpaper
 Set-ItemProperty -Path "HKCU:\Control Panel\Desktop\" -Name Wallpaper -Value "C:\wallpaper\vancouver.jpg" -Force
 
