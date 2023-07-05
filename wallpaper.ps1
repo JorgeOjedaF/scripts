@@ -12,5 +12,5 @@ Get-ItemProperty -Path $RegistryPath -Name WallPaper
 # Refresca para que tome los cambios
 RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters
 
-#reinicia la computadora
-#Restart-Computer -Force
+#es necesario reiniciar la computadora para que muestre los cambios
+Restart-Computer -Force
