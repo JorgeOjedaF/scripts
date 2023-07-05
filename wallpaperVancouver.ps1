@@ -8,3 +8,5 @@ Invoke-WebRequest -Uri https://raw.githubusercontent.com/JorgeOjedaF/install/mai
 
 #cambia el wallpaper
 Set-ItemProperty -Path "HKCU:\Control Panel\Desktop\" -Name Wallpaper -Value "C:\wallpaper\vancouver.jpg" -Force
+
+Write-Host "Se ejecuto el script wallpaperVancouver"
