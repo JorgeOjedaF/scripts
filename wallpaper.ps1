@@ -1,3 +1,4 @@
+# este script debe ejecutarse con la cuenta del usuario, sino no funciona desde script personalizados de deepFreeze.
 # ruta de la imagen a usar como fondo de pantalla, concatena el parametro para que quede algo asi: "C:\wallpaper\img1.jpg"
 $ImagePath = "C:\wallpaper\" + $args[0]
 
