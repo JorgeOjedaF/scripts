@@ -6,5 +6,5 @@ $output = "C:\src\flutter_windows_3.10.6-stable.zip"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
 # descomprimimos el zip
 Expand-Archive -Path C:\src\flutter_windows_3.10.6-stable.zip -DestinationPath C:\src\
-# ejecutamos el bat para agregar al PATH
-& C:\src\flutter_windows_3.10.6-stable\flutter\flutter_console.bat
+# agregamos la ruta al PATH
+$Env:PATH += ";C:\src\flutter\bin"
