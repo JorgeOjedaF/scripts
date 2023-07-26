@@ -1,12 +1,17 @@
-# este script debe ejecutarse con la cuenta del usuario, sino no funciona desde script personalizados de deepFreeze.
-# ruta de la imagen a usar como fondo de pantalla, concatena el parametro para que quede algo asi: "C:\wallpaper\img1.jpg"
-$ImagePath = "C:\wallpaper\" + $args[0]
+# Cambia el fondo de pantalla del escritorio
+
+# Se descarga la imagen
+$address = "https://raw.githubusercontent.com/JorgeOjedaF/install/main/vancouver.jpg"
+$fileName = "C:\wallpaper2\vancouver.jpg"
+(New-Object System.Net.WebClient).DownloadFile($address, $fileName)
 
 # Informacion del fondo de escritorio del registro del usuario actual
-$RegistryPath = "HKCU:\Control Panel\Desktop"
+# Importante: este script debe ejecutarse con la cuenta del usuario, por lo del HKCU.
+$path = "HKCU:\Control Panel\Desktop"
 
 # Cambia el wallpaper al cambiar el registro de windows
-Set-ItemProperty -Path $RegistryPath -Name WallPaper -Value $ImagePath
+Set-ItemProperty -Path $path -Name WallPaper -Value $fileName
 
 # es necesario reiniciar la computadora para que muestre los cambios
 Restart-Computer -Force
+
