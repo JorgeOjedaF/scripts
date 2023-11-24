@@ -45,7 +45,7 @@ $horarios = @{
 
 # Recupera el nombre de la computadora
 $nombreComputadora = $env:COMPUTERNAME
-# Busca el usuario a bloquear en la Lista 3
+# Busca el usuario a bloquear en la Lista 1
 $usuario = $listaUsuarios[$nombreComputadora]
 
 if ($usuario -ne $null) {
@@ -54,7 +54,7 @@ if ($usuario -ne $null) {
 
     if ($grupo -ne $null) {
 
-        # Busca el horario del grupo en la Lista 1
+        # Busca el horario del grupo en la Lista 3
         $horario = $horarios[$grupo]
 
         if ($horario -ne $null) {
