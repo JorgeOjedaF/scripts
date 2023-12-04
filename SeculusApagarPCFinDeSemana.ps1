@@ -8,7 +8,7 @@ $rutaCarpeta = "C:\Script5"
 $rutaScript1 = "$rutaCarpeta\Mensaje.ps1"
 $rutaScript2 = "$rutaCarpeta\ApagarPC.ps1"
 $carpeta = New-Item -Path $rutaCarpeta -ItemType Directory -Force
-$carpeta.Attributes = [System.IO.FileAttributes]::Hidden
+#$carpeta.Attributes = [System.IO.FileAttributes]::Hidden
 
 # Crea el script1 Mensaje.ps1
 $contenidoScript1 = @"
