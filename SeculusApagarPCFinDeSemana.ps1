@@ -8,7 +8,7 @@ $rutaCarpeta = "C:\Script5"
 $rutaScript1 = "$rutaCarpeta\Mensaje.ps1"
 $rutaScript2 = "$rutaCarpeta\ApagarPC.ps1"
 $carpeta = New-Item -Path $rutaCarpeta -ItemType Directory -Force
-#$carpeta.Attributes = [System.IO.FileAttributes]::Hidden
+$carpeta.Attributes = [System.IO.FileAttributes]::Hidden
 
 # Crea el script1 Mensaje.ps1
 $contenidoScript1 = @"
@@ -46,4 +46,4 @@ $trigger = New-ScheduledTaskTrigger -AtLogon
 $tarea = "ApagarPCFinDeSemana"
 
 # Crear la tarea programada
-Register-ScheduledTask -Action $accion -Trigger $trigger -TaskName $tarea -Description "Muestra mensaje y apaga la PC si el usuario inicia sesion un fin de semana"
+Register-ScheduledTask -Action $accion -Trigger $trigger -TaskName $tarea -User "NT AUTHORITY\SYSTEM" -Description "Muestra mensaje y apaga la PC si el usuario inicia sesion un fin de semana"
