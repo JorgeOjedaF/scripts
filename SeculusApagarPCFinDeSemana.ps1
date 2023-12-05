@@ -44,6 +44,7 @@ $contenidoScript2 | Out-File -FilePath $rutaScript2 -Encoding UTF8
 $accion = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File $rutaScript1 -WindowStyle Hidden"
 $trigger = New-ScheduledTaskTrigger -AtLogon
 $tarea = "ApagarPCFinDeSemana"
+$principal = New-ScheduledTaskPrincipal -UserID "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 
 # Crear la tarea programada
-Register-ScheduledTask -Action $accion -Trigger $trigger -TaskName $tarea -User "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest -Description "Muestra mensaje y apaga la PC si el usuario inicia sesion un fin de semana"
+Register-ScheduledTask -Action $accion -Trigger $trigger -TaskName $tarea -Principal $principal -Description "Muestra mensaje y apaga la PC si el usuario inicia sesion un fin de semana"
