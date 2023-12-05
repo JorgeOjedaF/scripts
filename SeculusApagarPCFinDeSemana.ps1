@@ -10,11 +10,14 @@
 $rutaCarpeta = "C:\ScriptFaronics"
 $rutaMensaje = "$rutaCarpeta\Mensaje.ps1"
 $rutaApagaPC = "$rutaCarpeta\ApagaPC.ps1"
+$rutaLogs = "$rutaCarpeta\log.txt"
 $carpeta = New-Item -Path $rutaCarpeta -ItemType Directory -Force
 $carpeta.Attributes = [System.IO.FileAttributes]::Hidden
 
 # Crea el script1 Mensaje.ps1
 $contenidoScript1 = @"
+	"Mensaje.ps1" >> "$rutaLogs"
+	Get-Date | Out-File -FilePath "$rutaLogs" -Encoding UTF8 -Append
 	# Mostrar mensaje al usuario
 	Add-Type -AssemblyName System.Windows.Forms
 	`$mensaje = "Esta computadora se apagara en 1 minuto porque esta prohibido su uso Sabado o Domingo"
@@ -26,6 +29,9 @@ $contenidoScript1 | Out-File -FilePath $rutaMensaje -Encoding UTF8
 
 # Crea el script2 ApagaPC.ps1
 $contenidoScript2 = @"
+	"ApagaPC.ps1" >> "$rutaLogs"
+	Get-Date | Out-File -FilePath "$rutaLogs" -Encoding UTF8 -Append
+
 	# Obtiene la fecha actual
 	`$fechaActual = Get-Date
 
