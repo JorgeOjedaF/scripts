@@ -50,7 +50,7 @@ $contenidoScript2 = @"
 $contenidoScript2 | Out-File -FilePath $rutaApagaPC -Encoding UTF8
 
 # Crea la accion, el trigger (iniciar sesion) y el nombre de la tarea
-$accion = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File $rutaMensaje -WindowStyle Hidden"
+$accion = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File $rutaMensaje"
 $trigger = New-ScheduledTaskTrigger -AtLogon
 $tarea = "ApagarPCLoginWeekend"
 $principal = New-ScheduledTaskPrincipal -UserID "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
