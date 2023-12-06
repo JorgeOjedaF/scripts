@@ -13,7 +13,7 @@ $carpeta.Attributes = [System.IO.FileAttributes]::Hidden
 
 # Crea el script1 Apagado.ps1
 $scriptApagado = @"
-	"Apagado.ps1: $(Get-Date)" >> $rutaLogs
+	"Apagado.ps1: `$(Get-Date)" >> $rutaLogs
 
 	# Obtiene la fecha actual
 	`$fechaActual = Get-Date
