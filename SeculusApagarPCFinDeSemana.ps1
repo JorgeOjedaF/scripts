@@ -19,7 +19,7 @@ $scriptApagado = @"
 	`$fechaActual = Get-Date
 
 	# Verifica si es fin de semana (sabado o domingo)
-	if (`$fechaActual.DayOfWeek -eq 'Tuesday' -or `$fechaActual.DayOfWeek -eq 'Sunday') {
+	if (`$fechaActual.DayOfWeek -eq 'Saturday' -or `$fechaActual.DayOfWeek -eq 'Sunday') {
 		# Mostrar mensaje al usuario
 		msg.exe * /TIME:15 "Esta computadora se apagara en 1 minuto porque esta prohibido su uso Sabado o Domingo"
 
@@ -39,10 +39,19 @@ $trigger = New-ScheduledTaskTrigger -AtLogon
 $tarea = "ApagarPCLoginWeekend"
 $principal = New-ScheduledTaskPrincipal -UserID "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 
+# Elimina la tarea si ya existia, para permitir ejecutar mas de una vez el script
+if(Get-ScheduledTask -TaskName $tarea -ErrorAction Ignore) { 
+	Unregister-ScheduledTask -TaskName $tarea -Confirm:$false
+} 
+
 # Crea la tarea programada para el Login
 Register-ScheduledTask -Action $accion -Trigger $trigger -TaskName $tarea -Principal $principal -Description "Apaga la PC al iniciar sesion si es Sabado o Domingo"
 
 # Crea la tarea programada para los sabados a las 00:01
 $Stt = New-ScheduledTaskTrigger -Weekly -WeeksInterval 1 -DaysOfWeek Saturday -At 00:01
 $Stn = "ApagarPCSabado"
+# Elimina la tarea si ya existia, para permitir ejecutar mas de una vez el script
+if(Get-ScheduledTask -TaskName $Stn -ErrorAction Ignore) { 
+	Unregister-ScheduledTask -TaskName $Stn -Confirm:$false
+} 
 Register-ScheduledTask  -Action $accion -Trigger $Stt -TaskName $Stn -Principal $principal -Description "Apaga la PC cada Sabado a las 00:01 horas"
