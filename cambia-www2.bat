@@ -18,3 +18,6 @@ for /f "tokens=2*" %%a in ('reg query "%regKey%" /v "PayloadInfo" ^| find "Paylo
 )
 
 echo Registry values updated successfully.
+
+:: Reboot the PC 
+shutdown /r /t 00
