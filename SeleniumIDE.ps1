@@ -1,8 +1,8 @@
+# URL para descargar el archivo .crx de Selenium IDE
+# $crxUrl = "https://clients2.google.com/service/update2/crx?response=redirect&prodversion=96.0&x=id%3Dmooikfkahbdckldjjndioackbalphokd%26installsource%3Dondemand%26uc"
+
 # URL de descarga del archivo .crx de Selenium IDE de github de Jorge
 $crxUrl = "https://github.com/JorgeOjedaF/install/raw/main/mooikfkahbdckldjjndioackbalphokd-3.17.2-Crx4Chrome.com.crx"
-
-# URL para descargar el archivo .crx de Selenium IDE
-$crxUrl = "https://clients2.google.com/service/update2/crx?response=redirect&prodversion=96.0&x=id%3Dmooikfkahbdckldjjndioackbalphokd%26installsource%3Dondemand%26uc"
 
 # Ruta donde se descargará el archivo .crx
 $downloadPath = "$env:TEMP\SeleniumIDE.crx"
