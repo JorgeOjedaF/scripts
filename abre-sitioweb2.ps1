@@ -1,1 +1,1 @@
-Start-Process "http://exam.net"
+Invoke-Item "https://www.ejemplo.com"
