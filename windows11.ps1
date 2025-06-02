@@ -10,19 +10,50 @@ if (-not (Test-Path "C:\Temp")) {
 # Copiar la ISO
 Copy-Item -Path $isoOrigen -Destination $isoDestino -Force
 
+# Verifica si la ISO está presente
+if (-not (Test-Path $isoDestino)) {
+    Write-Output "No se encontró la ISO en $isoDestino. Abortando."
+    exit 1
+}
+
 # Montar la ISO
-Mount-DiskImage -ImagePath $isoDestino
-Start-Sleep -Seconds 5
+try {
+    Mount-DiskImage -ImagePath $isoDestino -ErrorAction Stop
+    Start-Sleep -Seconds 5
+}
+catch {
+    Write-Output " Error al montar la ISO: $_"
+    exit 1
+}
 
 # Obtener letra de unidad montada
-$unidadISO = (Get-Volume | Where-Object { $_.FileSystemLabel -eq "CCCOMA_X64FRE_ES-MX_DV9" }).DriveLetter
-if (-not $unidadISO) {
-    $unidadISO = (Get-Volume | Where-Object { $_.DriveLetter -and (Get-ChildItem "$($_.DriveLetter):\" -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "setup.exe" }) }).DriveLetter
+try {
+    $unidadISO = (Get-DiskImage -ImagePath $isoDestino | Get-Volume).DriveLetter
+    $unidadISOPath = "$unidadISO`:\setup.exe"
 }
-$unidadISOPath = "$unidadISO`:\setup.exe"
+catch {
+    Write-Output "No se pudo detectar la letra de unidad montada: $_"
+    Dismount-DiskImage -ImagePath $isoDestino -ErrorAction SilentlyContinue
+    exit 1
+}
+
+# Verifica que setup.exe exista
+if (-not (Test-Path $unidadISOPath)) {
+    Write-Output "No se encontró setup.exe en $unidadISOPath"
+    Dismount-DiskImage -ImagePath "C:\Temp\Windows11.iso"
+    exit 1
+}
 
 # Ejecutar la actualización (manteniendo datos y apps)
-Start-Process -FilePath $unidadISOPath -ArgumentList "/auto upgrade /quiet /noreboot /compat ignorewarning" -Wait
+try {
+    Write-Output " Iniciando actualización a Windows 11 desde $unidadISOPath..."
+    Start-Process -FilePath $unidadISOPath -ArgumentList "/auto upgrade /quiet /noreboot /compat ignorewarning" -Wait
+}
+catch {
+    Write-Output " Error al ejecutar el setup.exe: $_"
+    Dismount-DiskImage -ImagePath $isoDestino -ErrorAction SilentlyContinue
+    exit 1
+}
 
 # Desmontar la ISO
 Dismount-DiskImage -ImagePath $isoDestino
