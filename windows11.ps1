@@ -1,62 +1,89 @@
-# Rutas origen y destino del archivo ISO con windows 11
-$isoOrigen = "\\vmware-host\sharedfolders\Jorge\iso\Windows11.iso"
+# Ruta de la ISO
 $isoDestino = "C:\Temp\Windows11.iso"
 
-# Crear carpeta temporal si no existe
+# Ruta de logs
+$logFile = "C:\Temp\UpgradeWin11.log"
+$transcriptFile = "C:\Temp\Transcript_UpgradeWin11.txt"
+
+# Crear carpeta de log si no existe
 if (-not (Test-Path "C:\Temp")) {
     New-Item -Path "C:\Temp" -ItemType Directory | Out-Null
 }
 
-# Copiar la ISO
-Copy-Item -Path $isoOrigen -Destination $isoDestino -Force
+# Iniciar transcripción completa
+Start-Transcript -Path $transcriptFile -Append -Force
 
-# Verifica si la ISO está presente
+# Función para registrar eventos clave en log personalizado
+function Log {
+    param([string]$msg)
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    Add-Content -Path $logFile -Value "$timestamp - $msg"
+}
+
+Log "🔧 Iniciando script de actualización a Windows 11..."
+
+# Verificar si existe la ISO
 if (-not (Test-Path $isoDestino)) {
-    Write-Output "No se encontró la ISO en $isoDestino. Abortando."
+    Log "No se encontró la ISO en $isoDestino. Abortando."
+    Stop-Transcript
     exit 1
 }
 
 # Montar la ISO
 try {
+    Log "Montando la ISO..."
     Mount-DiskImage -ImagePath $isoDestino -ErrorAction Stop
     Start-Sleep -Seconds 5
 }
 catch {
-    Write-Output " Error al montar la ISO: $_"
+    Log "Error al montar la ISO: $_"
+    Stop-Transcript
     exit 1
 }
 
-# Obtener letra de unidad montada
+# Obtener la letra de la unidad montada
 try {
     $unidadISO = (Get-DiskImage -ImagePath $isoDestino | Get-Volume).DriveLetter
     $unidadISOPath = "$unidadISO`:\setup.exe"
+    Log "Unidad montada como $unidadISO. Ruta del setup: $unidadISOPath"
 }
 catch {
-    Write-Output "No se pudo detectar la letra de unidad montada: $_"
+    Log "No se pudo detectar la letra de la unidad: $_"
     Dismount-DiskImage -ImagePath $isoDestino -ErrorAction SilentlyContinue
+    Stop-Transcript
     exit 1
 }
 
-# Verifica que setup.exe exista
+# Verificar si existe setup.exe
 if (-not (Test-Path $unidadISOPath)) {
-    Write-Output "No se encontró setup.exe en $unidadISOPath"
-    Dismount-DiskImage -ImagePath "C:\Temp\Windows11.iso"
+    Log "No se encontró setup.exe en $unidadISOPath"
+    Dismount-DiskImage -ImagePath $isoDestino -ErrorAction SilentlyContinue
+    Stop-Transcript
     exit 1
 }
 
-# Ejecutar la actualización (manteniendo datos y apps)
+# Ejecutar setup.exe para actualizar
 try {
-    Write-Output " Iniciando actualización a Windows 11 desde $unidadISOPath..."
+    Log "Ejecutando setup.exe para iniciar la actualización..."
     Start-Process -FilePath $unidadISOPath -ArgumentList "/auto upgrade /quiet /noreboot /compat ignorewarning" -Wait
+    Log "Comando ejecutado correctamente. El sistema se reiniciará si es necesario."
 }
 catch {
-    Write-Output " Error al ejecutar el setup.exe: $_"
+    Log "Error al ejecutar setup.exe: $_"
     Dismount-DiskImage -ImagePath $isoDestino -ErrorAction SilentlyContinue
+    Stop-Transcript
     exit 1
 }
 
 # Desmontar la ISO
-Dismount-DiskImage -ImagePath $isoDestino
+try {
+    Log "Desmontando la ISO..."
+    Dismount-DiskImage -ImagePath $isoDestino -ErrorAction SilentlyContinue
+}
+catch {
+    Log "Error al desmontar la ISO (no crítico): $_"
+}
 
-# Reiniciar el equipo
+Log "Reiniciando el equipo..."
+Stop-Transcript
 Restart-Computer -Force
