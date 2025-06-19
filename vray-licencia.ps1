@@ -1,6 +1,6 @@
 $settings = @{
     servers = @(@{
-        address = args[0]
+        address = $args[0]
         port = 30304
     })
 }
