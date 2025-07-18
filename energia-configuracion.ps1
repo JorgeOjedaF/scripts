@@ -1,21 +1,39 @@
 # Función para mostrar los valores actuales
 function Mostrar-ConfiguracionEnergia {
     Write-Host "`n--- Estado actual de configuración de energía ---" -ForegroundColor Cyan
-    Write-Host "Hibernación: $(if ((powercfg -a) -notmatch 'Hibernate') { 'Deshabilitada' } else { 'Habilitada' })"
-    
+
+    $hibernacionDisponible = powercfg -a | Select-String "Hibernación"
+    Write-Host "Hibernación: $(if ($hibernacionDisponible) { 'Habilitada' } else { 'Deshabilitada' })"
+
     $valores = @{
-        "Suspensión (DC)"     = powercfg -query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE | Select-String -Pattern "Power Setting Index: 0x(\w+)" | Select-Object -First 1
-        "Suspensión (AC)"     = powercfg -query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE | Select-String -Pattern "Power Setting Index: 0x(\w+)" | Select-Object -Last 1
-        "Apagar disco (DC)"   = powercfg -query SCHEME_CURRENT SUB_DISK DISKIDLE | Select-String -Pattern "Power Setting Index: 0x(\w+)" | Select-Object -First 1
-        "Apagar disco (AC)"   = powercfg -query SCHEME_CURRENT SUB_DISK DISKIDLE | Select-String -Pattern "Power Setting Index: 0x(\w+)" | Select-Object -Last 1
-        "Pantalla (DC)"       = powercfg -query SCHEME_CURRENT SUB_VIDEO VIDEOIDLE | Select-String -Pattern "Power Setting Index: 0x(\w+)" | Select-Object -First 1
-        "Pantalla (AC)"       = powercfg -query SCHEME_CURRENT SUB_VIDEO VIDEOIDLE | Select-String -Pattern "Power Setting Index: 0x(\w+)" | Select-Object -Last 1
+        "Suspensión (DC)"     = @{ Sub = "SUB_SLEEP";   Setting = "STANDBYIDLE"; DC = $true  }
+        "Suspensión (AC)"     = @{ Sub = "SUB_SLEEP";   Setting = "STANDBYIDLE"; DC = $false }
+        "Apagar disco (DC)"   = @{ Sub = "SUB_DISK";    Setting = "DISKIDLE";    DC = $true  }
+        "Apagar disco (AC)"   = @{ Sub = "SUB_DISK";    Setting = "DISKIDLE";    DC = $false }
+        "Pantalla (DC)"       = @{ Sub = "SUB_VIDEO";   Setting = "VIDEOIDLE";   DC = $true  }
+        "Pantalla (AC)"       = @{ Sub = "SUB_VIDEO";   Setting = "VIDEOIDLE";   DC = $false }
     }
 
     foreach ($clave in $valores.Keys) {
-        $hex = ($valores[$clave] -replace '.*0x', '')
-        $dec = [convert]::ToInt32($hex, 16)
-        Write-Host "$clave: $dec minutos"
+        $subgrupo = $valores[$clave].Sub
+        $config = $valores[$clave].Setting
+        $dc = $valores[$clave].DC
+
+        try {
+            $salida = powercfg -query SCHEME_CURRENT $subgrupo $config
+            $linea = $salida | Where-Object { $_ -match "Power Setting Index" } 
+            $index = if ($dc) { $linea[0] } else { $linea[-1] }
+
+            if ($index -match "0x(\w+)") {
+                $hex = $matches[1]
+                $dec = [convert]::ToInt32($hex, 16)
+                Write-Host "$clave: $dec minutos"
+            } else {
+                Write-Host "$clave: No se pudo obtener el valor" -ForegroundColor Yellow
+            }
+        } catch {
+            Write-Host "$clave: Error al obtener la configuración" -ForegroundColor Red
+        }
     }
 }
 
