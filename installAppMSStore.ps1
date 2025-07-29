@@ -6,20 +6,21 @@ $AppId = "9NBLGGH40F2T"
 # Ruta del script
 $ScriptPath = "$env:ProgramData\InstallWithWinget.ps1"
 
-# Contenido del script que se ejecutará en la sesión de usuario
+# Contenido del script que se ejecutará al iniciar sesión
 $WingetCommand = @"
 winget install --id $AppId --source msstore --silent --accept-package-agreements --accept-source-agreements
-Unregister-ScheduledTask -TaskName 'InstallCompleteAnatomy' -Confirm:\$false
+Unregister-ScheduledTask -TaskName InstallCompleteAnatomy -Confirm:\$false
 Remove-Item -Path '$ScriptPath' -Force
 "@
 
-# Guardar el script en disco
-Set-Content -Path $ScriptPath -Value $WingetCommand -Force -Encoding UTF8
+# Guardar el script
+Set-Content -Path $ScriptPath -Value $WingetCommand -Encoding UTF8 -Force
 
 # Crear acción, trigger, principal y configuración de la tarea
 $Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-WindowStyle Hidden -ExecutionPolicy Bypass -File `"$ScriptPath`""
 $Trigger = New-ScheduledTaskTrigger -AtLogOn
-$Principal = New-ScheduledTaskPrincipal -UserId "Interactive" -LogonType Interactive -RunLevel Highest
+$Principal = New-ScheduledTaskPrincipal -UserId "INTERACTIVE" -LogonType Interactive -RunLevel Highest
 
-# Registrar la tarea programada
+# Registrar la tarea
 Register-ScheduledTask -TaskName "InstallCompleteAnatomy" -Action $Action -Trigger $Trigger -Principal $Principal -Force
+
