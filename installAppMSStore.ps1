@@ -3,7 +3,7 @@
 $AppId = $args[0]
 $AppId = "9NBLGGH40F2T"
 
-# Ruta donde se guardará el script de instalación
+# Ruta del script
 $ScriptPath = "$env:ProgramData\InstallWithWinget.ps1"
 
 # Contenido del script que se ejecutará en la sesión de usuario
