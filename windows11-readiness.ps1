@@ -8,8 +8,9 @@ Write-Host "CPU: $cpuOK - $($cpu.Name) | Cores: $($cpu.NumberOfCores) | Speed: $
 
 # --- RAM ---
 $ram = (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB
-$ramOK = $ram -ge 4
-Write-Host("RAM: $ramOK - {0:N2} GB" -f $ram) -ForegroundColor ($(if ($ramOK) {'Green'} else {'Red'}))
+$ram2 = $([math]::Round($ram,2))
+$ramOK = $ram2 -ge 4
+Write-Host("RAM: $ramOK - {0:N2} GB" -f $ram2) -ForegroundColor ($(if ($ramOK) {'Green'} else {'Red'}))
 
 # --- Disk ---
 $disk = (Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'").Size / 1GB
