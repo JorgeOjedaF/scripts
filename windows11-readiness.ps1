@@ -4,23 +4,23 @@ Write-Host "=== Windows 11 Requirements Check ===" -ForegroundColor Cyan
 # --- CPU ---
 $cpu = Get-CimInstance Win32_Processor
 $cpuOK = ($cpu.NumberOfCores -ge 2 -and $cpu.MaxClockSpeed -ge 1000 -and [Environment]::Is64BitOperatingSystem)
-Write-Host "CPU: $cpuOK - $($cpu.Name) | Cores: $($cpu.NumberOfCores) | Speed: $($cpu.MaxClockSpeed) MHz | 64-bit: $([Environment]::Is64BitOperatingSystem)" -ForegroundColor ($(if ($cpuOK) {'Green'} else {'Red'}))
+Write-Host "CPU: $cpuOK ( $($cpu.Name) | Cores: $($cpu.NumberOfCores) | Speed: $($cpu.MaxClockSpeed) MHz | 64-bit: $([Environment]::Is64BitOperatingSystem))" -ForegroundColor ($(if ($cpuOK) {'Green'} else {'Red'}))
 
 # --- RAM ---
 $ram = (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB
 $ram2 = $([math]::Round($ram,2))
 $ramOK = $ram2 -ge 4
-Write-Host("RAM: $ramOK - {0:N2} GB" -f $ram2) -ForegroundColor ($(if ($ramOK) {'Green'} else {'Red'}))
+Write-Host("RAM: $ramOK ( {0:N2} GB)" -f $ram2) -ForegroundColor ($(if ($ramOK) {'Green'} else {'Red'}))
 
 # --- Disk ---
 $disk = (Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'").Size / 1GB
 $diskOK = $disk -ge 64
-Write-Host ("Disk (C:): $diskOK - {0:N2} GB" -f $disk) -ForegroundColor ($(if ($diskOK) {'Green'} else {'Red'}))
+Write-Host ("Disk (C:): $diskOK ( {0:N2} GB)" -f $disk) -ForegroundColor ($(if ($diskOK) {'Green'} else {'Red'}))
 
 # --- TPM ---
 $tpm = Get-CimInstance -Namespace "Root\CIMv2\Security\MicrosoftTpm" -ClassName Win32_Tpm -ErrorAction SilentlyContinue
 $tpmOK = ($tpm -and $tpm.SpecVersion -match "2.0")
-Write-Host "TPM: $tpmOK - $($tpm.SpecVersion)" -ForegroundColor ($(if ($tpmOK) {'Green'} else {'Red'}))
+Write-Host "TPM: $tpmOK ( $($tpm.SpecVersion))" -ForegroundColor ($(if ($tpmOK) {'Green'} else {'Red'}))
 
 # --- Secure Boot ---
 $sb = Confirm-SecureBootUEFI -ErrorAction SilentlyContinue
@@ -36,8 +36,7 @@ $gpuOK = $dxVersion -match "12"
 $gpuNames = ($dxinfo | Select-String "Card name").Line -replace "Card name:\s*", "" | ForEach-Object { $_.Trim() }
 $gpuList = $gpuNames -join " | "
 Write-Host "DirectX: $gpuOK" -ForegroundColor ($(if ($gpuOK) {'Green'} else {'Red'}))
-Write-Host "Card name: " $($gpuNames -join ' | ')
-Write-Host $dxVersion
+Write-Host "(Card name: " $($gpuNames -join ' | ') $dxVersion ""
 
 # --- Screen (resolution and diagonal ≥ 9'') ---
 Add-Type -AssemblyName System.Windows.Forms
@@ -58,7 +57,7 @@ $heightInches = $height / $dpiX
 $diagonalInches = [math]::Sqrt([math]::Pow($widthInches,2) + [math]::Pow($heightInches,2))
 
 $screenOK = ($height -ge 720 -and $diagonalInches -ge 9)
-Write-Host ("Screen: $screenOK - {0}x{1} px | Diagonal approx: {2:N1}''" -f $width, $height, $diagonalInches) -ForegroundColor ($(if ($screenOK) {'Green'} else {'Red'}))
+Write-Host ("Screen: $screenOK ( {0}x{1} px | Diagonal approx: {2:N1}'')" -f $width, $height, $diagonalInches) -ForegroundColor ($(if ($screenOK) {'Green'} else {'Red'}))
 
 
 # --- Result ---
