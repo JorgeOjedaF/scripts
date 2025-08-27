@@ -58,7 +58,7 @@ $widthInches = $width / $dpiX
 $heightInches = $height / $dpiX
 $diagonalInches = [math]::Sqrt([math]::Pow($widthInches,2) + [math]::Pow($heightInches,2))
 
-$screenOK = ($width -ge 1280 -and $height -ge 720 -and $diagonalInches -ge 9)
+$screenOK = ($height -ge 720 -and $diagonalInches -ge 9)
 Write-Host ("Pantalla: $screenOK - {0}x{1} px | Diagonal aprox: {2:N1}''" -f $width, $height, $diagonalInches) `
     -ForegroundColor ($(if ($screenOK) {'Green'} else {'Red'}))
 
