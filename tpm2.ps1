@@ -40,14 +40,27 @@ Write-Host "GPU: $gpuName"
 Write-Host "DirectX: $gpuOK - $dxVersion" -ForegroundColor ($(if ($gpuOK) {'Green'} else {'Red'}))
 
 
-# --- Pantalla ---
+# --- Pantalla (resolución y diagonal ≥ 9'') ---
 Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
 $screen = [System.Windows.Forms.Screen]::PrimaryScreen
 $width = $screen.Bounds.Width
 $height = $screen.Bounds.Height
 
-$screenOK = ($width -ge 1280 -and $height -ge 720)
-Write-Host "Pantalla: $screenOK - ${width}x${height}" -ForegroundColor ($(if ($screenOK) {'Green'} else {'Red'}))
+# Obtener DPI de Windows
+$g = [System.Drawing.Graphics]::FromHwnd([IntPtr]::Zero)
+$dpiX = $g.DpiX
+$g.Dispose()
+
+# Calcular tamaño en pulgadas
+$widthInches = $width / $dpiX
+$heightInches = $height / $dpiX
+$diagonalInches = [math]::Sqrt($widthInches**2 + $heightInches**2)
+
+$screenOK = ($width -ge 1280 -and $height -ge 720 -and $diagonalInches -ge 9)
+Write-Host ("Pantalla: $screenOK - {0}x{1} px | Diagonal aprox: {2:N1}''" -f $width, $height, $diagonalInches) `
+    -ForegroundColor ($(if ($screenOK) {'Green'} else {'Red'}))
 
 
 # --- Resultado ---
