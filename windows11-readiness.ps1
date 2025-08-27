@@ -36,7 +36,7 @@ $gpuOK = $dxVersion -match "12"
 $gpuNames = ($dxinfo | Select-String "Card name").Line -replace "Card name:\s*", "" | ForEach-Object { $_.Trim() }
 $gpuList = $gpuNames -join " | "
 Write-Host "DirectX: $gpuOK" -ForegroundColor ($(if ($gpuOK) {'Green'} else {'Red'}))
-Write-Host "(Card name: " $($gpuNames -join ' | ') $dxVersion ""
+Write-Host "(Card name: " $($gpuNames -join ' | ') $dxVersion ")"
 
 # --- Screen (resolution and diagonal ≥ 9'') ---
 Add-Type -AssemblyName System.Windows.Forms
