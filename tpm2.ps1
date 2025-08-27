@@ -5,7 +5,7 @@ Write-Host "=== Verificacion de requisitos de Windows 11 ===" -ForegroundColor C
 # --- CPU ---
 $cpu = Get-CimInstance Win32_Processor
 $cpuOK = ($cpu.NumberOfCores -ge 2 -and $cpu.MaxClockSpeed -ge 1000 -and [Environment]::Is64BitOperatingSystem)
-Write-Host "CPU: $cpuOK - $($cpu.Name) | Núcleos: $($cpu.NumberOfCores) | Velocidad: $($cpu.MaxClockSpeed) MHz | 64-bit: $([Environment]::Is64BitOperatingSystem)" `
+Write-Host "CPU: $cpuOK - $($cpu.Name) | Nucleos: $($cpu.NumberOfCores) | Velocidad: $($cpu.MaxClockSpeed) MHz | 64-bit: $([Environment]::Is64BitOperatingSystem)" `
     -ForegroundColor ($(if ($cpuOK) {'Green'} else {'Red'}))
 
 # --- RAM ---
@@ -29,14 +29,26 @@ $sbOK = ($sb -eq $true)
 Write-Host "Secure Boot habilitado: $sbOK - $sb" -ForegroundColor ($(if ($sbOK) {'Green'} else {'Red'}))
 
 # --- GPU ---
-$gpu = Get-CimInstance Win32_VideoController
-$gpuOK = $gpu.VideoProcessor -match "DirectX 12"
-Write-Host "GPU: $gpuOK - $($gpu.Name) | Procesador de video: $($gpu.VideoProcessor)" -ForegroundColor ($(if ($gpuOK) {'Green'} else {'Red'}))
+$tempFile = "$env:TEMP\dxdiag_output.txt"
+Start-Process -FilePath "dxdiag.exe" -ArgumentList "/t $tempFile" -Wait -WindowStyle Hidden
+$dxinfo = Get-Content $tempFile
+$dxVersion = ($dxinfo | Select-String "DirectX Version").ToString()
+$gpuName = ($dxinfo | Select-String "Card name").ToString()
+
+$gpuOK = $dxVersion -match "12"
+Write-Host "GPU: $gpuName"
+Write-Host "DirectX: $gpuOK - $dxVersion" -ForegroundColor ($(if ($gpuOK) {'Green'} else {'Red'}))
+
 
 # --- Pantalla ---
-$screen = Get-CimInstance Win32_DesktopMonitor | Where-Object { $_.ScreenWidth -ne $null -and $_.ScreenHeight -ne $null }
-$screenOK = ($screen.ScreenWidth -ge 1280 -and $screen.ScreenHeight -ge 720 -and (($screen.ScreenWidth/96) -ge 9))
-Write-Host "Pantalla: $screenOK - $($screen.ScreenWidth)x$($screen.ScreenHeight)" -ForegroundColor ($(if ($screenOK) {'Green'} else {'Red'}))
+Add-Type -AssemblyName System.Windows.Forms
+$screen = [System.Windows.Forms.Screen]::PrimaryScreen
+$width = $screen.Bounds.Width
+$height = $screen.Bounds.Height
+
+$screenOK = ($width -ge 1280 -and $height -ge 720)
+Write-Host "Pantalla: $screenOK - ${width}x${height}" -ForegroundColor ($(if ($screenOK) {'Green'} else {'Red'}))
+
 
 # --- Resultado ---
 if ($cpuOK -and $ramOK -and $diskOK -and $tpmOK -and $sbOK -and $gpuOK -and $screenOK) {
