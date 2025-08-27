@@ -30,8 +30,8 @@ Write-Host "Secure Boot enabled: $sb" -ForegroundColor ($(if ($sbOK) {'Green'} e
 $tempFile = "$env:TEMP\dxdiag_output.txt"
 Start-Process -FilePath "dxdiag.exe" -ArgumentList "/t $tempFile" -Wait -WindowStyle Hidden
 $dxinfo = Get-Content $tempFile
-$dxVersion = ($dxinfo | Select-String "DirectX Version").ToString().Trim()
-$gpuName = ($dxinfo | Select-String "Card name").ToString().Trim()
+$dxVersion = ($dxinfo | Select-String "DirectX Version").ToString().Split(":")[1].Trim()
+$gpuName = ($dxinfo | Select-String "Card name").ToString().Split(":")[1].Trim()
 
 $gpuOK = $dxVersion -match "12"
 Write-Host "DirectX: $gpuOK - $gpuName - $dxVersion" -ForegroundColor ($(if ($gpuOK) {'Green'} else {'Red'}))
