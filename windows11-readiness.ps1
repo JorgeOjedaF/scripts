@@ -27,26 +27,17 @@ $sb = Confirm-SecureBootUEFI -ErrorAction SilentlyContinue
 $sbOK = ($sb -eq $true)
 Write-Host "Secure Boot enabled: $sb" -ForegroundColor ($(if ($sbOK) {'Green'} else {'Red'}))
 
-# --- GPU ---
+# --- GPU --- Graphics card	Compatible with DirectX 12 or later
 $tempFile = "$env:TEMP\dxdiag_output.txt"
 Start-Process -FilePath "dxdiag.exe" -ArgumentList "/t $tempFile" -Wait -WindowStyle Hidden
 $dxinfo = Get-Content $tempFile
 $dxVersion = ($dxinfo | Select-String "DirectX Version").ToString().Trim()
-
-# Extraer nombres de GPU desde dxdiag
-$gpuNames = ($dxinfo | Select-String "Card name").ToString() `
-    -replace "Card name:\s*", ""   # quitar el prefijo "Card name: "
-
-# Si hay varias GPUs, devolver todas
-if ($gpuNames -is [array]) {
-    $gpuList = $gpuNames -join " | "
-} else {
-    $gpuList = $gpuNames
-}
-
 $gpuOK = $dxVersion -match "12"
-Write-Host "DirectX: $gpuOK - $gpuList - $dxVersion" -ForegroundColor ($(if ($gpuOK) {'Green'} else {'Red'}))
-
+$gpuNames = ($dxinfo | Select-String "Card name").Line -replace "Card name:\s*", "" | ForEach-Object { $_.Trim() }
+$gpuList = $gpuNames -join " | "
+Write-Host "DirectX: $gpuOK" -ForegroundColor ($(if ($gpuOK) {'Green'} else {'Red'}))
+Write-Host "Card name: " $($gpuNames -join ' | ')
+Write-Host $dxVersion
 
 # --- Screen (resolution and diagonal ≥ 9'') ---
 Add-Type -AssemblyName System.Windows.Forms
