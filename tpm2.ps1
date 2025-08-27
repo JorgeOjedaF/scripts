@@ -56,7 +56,7 @@ $g.Dispose()
 # Calcular tamaño en pulgadas
 $widthInches = $width / $dpiX
 $heightInches = $height / $dpiX
-$diagonalInches = [math]::Sqrt($widthInches**2 + $heightInches**2)
+$diagonalInches = [math]::Sqrt([math]::Pow($widthInches,2) + [math]::Pow($heightInches,2))
 
 $screenOK = ($width -ge 1280 -and $height -ge 720 -and $diagonalInches -ge 9)
 Write-Host ("Pantalla: $screenOK - {0}x{1} px | Diagonal aprox: {2:N1}''" -f $width, $height, $diagonalInches) `
