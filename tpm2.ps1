@@ -5,8 +5,8 @@ $cpu = Get-CimInstance Win32_Processor
 $cpuOK = ($cpu.NumberOfCores -ge 2 -and $cpu.MaxClockSpeed -ge 1000 -and [Environment]::Is64BitOperatingSystem)
 
 # --- RAM ---
-$ramGB = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 0)
-$ramOK = $ramGB -ge 4
+$ram = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 0)
+$ramOK = $ram -ge 4
 
 # --- Disk ---
 $disk = (Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'").Size / 1GB
