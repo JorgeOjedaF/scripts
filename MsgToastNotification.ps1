@@ -5,6 +5,12 @@ if (-not (Get-Module -ListAvailable -Name BurntToast)) {
     Install-Module -Name BurntToast -Force -Scope CurrentUser
 }
 
+# Aseguramos que C:\Temp exista
+$folder = "C:\Temp"
+if (-not (Test-Path $folder)) {
+    New-Item -Path $folder -ItemType Directory -Force | Out-Null
+}
+
 # Crear script temporal para la notificación
 $usuario = "$env:USERNAME"
 $scriptPath = "C:\Temp\toast_temp.ps1"
@@ -16,8 +22,8 @@ $scriptContent | Out-File -FilePath $scriptPath -Encoding UTF8
 
 # Crear tarea programada para ejecutarse inmediatamente
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -File `"$scriptPath`""
-$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(5)
-$principal = New-ScheduledTaskPrincipal -UserId $usuario -LogonType Interactive -RunLevel LeastPrivilege
+$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(2)
+$principal = New-ScheduledTaskPrincipal -UserId $usuario -LogonType Interactive -RunLevel Limited
 
 Register-ScheduledTask -TaskName "MsgToast" -Action $action -Trigger $trigger -Principal $principal -Force
 
