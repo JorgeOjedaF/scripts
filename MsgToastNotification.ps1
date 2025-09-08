@@ -12,7 +12,7 @@ if (-not (Test-Path $folder)) {
 }
 
 # Crear script temporal para la notificación
-$usuario = "$env:USERNAME"
+$UserId = "$env:UserDomain\$env:UserName"
 $scriptPath = "C:\Temp\toast_temp.ps1"
 $scriptContent = @"
 Import-Module BurntToast
@@ -23,7 +23,7 @@ $scriptContent | Out-File -FilePath $scriptPath -Encoding UTF8
 # Crear tarea programada para ejecutarse inmediatamente
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -File `"$scriptPath`""
 $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(2)
-$principal = New-ScheduledTaskPrincipal -UserId $usuario -LogonType Interactive -RunLevel Limited
+$principal = New-ScheduledTaskPrincipal -UserId $UserId -LogonType Interactive -RunLevel Limited
 
 Register-ScheduledTask -TaskName "MsgToast" -Action $action -Trigger $trigger -Principal $principal -Force
 
