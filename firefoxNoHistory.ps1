@@ -1,22 +1,32 @@
-$policiesPath = "C:\Program Files\Mozilla Firefox\distribution"
-if (!(Test-Path $policiesPath)) {
-    New-Item -Path $policiesPath -ItemType Directory -Force
-}
+$paths = @(
+    "C:\Program Files\Mozilla Firefox\distribution",
+    "C:\Program Files (x86)\Mozilla Firefox\distribution"
+)
 
-$policiesFile = Join-Path $policiesPath "policies.json"
+foreach ($p in $paths) {
+    if (Test-Path (Split-Path $p -Parent)) {
+        if (!(Test-Path $p)) {
+            New-Item -Path $p -ItemType Directory -Force | Out-Null
+        }
 
-$policiesContent = @"
+        $policiesFile = Join-Path $p "policies.json"
+
+        $policiesContent = @"
 {
   "policies": {
     "DisableTelemetry": true,
     "DisableFirefoxStudies": true,
+    "DisablePocket": true,
+    "DisableFirefoxAccounts": true,
+    "DisableFormHistory": true,
     "Preferences": {
-      "browser.privatebrowsing.autostart": true,
-      "places.history.enabled": false,
-      "browser.formfill.enable": false
+      "browser.privatebrowsing.autostart": true
     }
   }
 }
 "@
 
-Set-Content -Path $policiesFile -Value $policiesContent -Encoding UTF8
+        Set-Content -Path $policiesFile -Value $policiesContent -Encoding UTF8
+        Write-Host "policies.json creado en $p"
+    }
+}
