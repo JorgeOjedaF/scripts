@@ -9,7 +9,7 @@ foreach ($path in $paths) {
     if (Test-Path $path) {
         Get-ChildItem $path |
         ForEach-Object { Get-ItemProperty $_.PsPath } |
-        Where-Object { $_.DisplayName -like "*Opera*" } |
+        Where-Object { $_.DisplayName -like "Opera*" } |
         ForEach-Object {
             Write-Host "Eliminando entrada de registro: $($_.DisplayName)"
             Remove-Item $_.PsPath -Recurse -Force
