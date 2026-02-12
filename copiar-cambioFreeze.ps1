@@ -1,4 +1,4 @@
-$CarpetaCompartida = "DESKTOP-12N8ANK\Compartido"
+$CarpetaCompartida = "\\DESKTOP-12N8ANK\Compartido"
 $Archivo = "CambioFreeze.reg"
 $Carpeta = "C:\MV"
 $Compartido = $CarpetaCompartida + "\" + $Archivo
