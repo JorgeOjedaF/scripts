@@ -7,5 +7,12 @@ New-Item -Path $RegPath -Force | Out-Null
 Set-ItemProperty -Path $RegPath -Name "legalnoticecaption" -Type String -Value "Aviso Importante"
 Set-ItemProperty -Path $RegPath -Name "legalnoticetext" -Type String -Value $Mensaje
 
-# despues de establecer el mensaje, cierra la sesion (forzando cerrar las aplicaciones)
-shutdown /l /f
+# ahora cierra todas las sesiones
+$sesiones = quser 2>$null | Select-Object -Skip 1
+foreach ($linea in $sesiones) {
+    if ($linea -match "Active") {
+        $partes = $linea -split '\s+'
+        $id = $partes[2]
+        logoff $id
+    }
+}
