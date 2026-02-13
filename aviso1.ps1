@@ -1,0 +1,11 @@
+# Este script muestra un mensaje antes de mostrar la ventana de login al usuario
+# Espera recibir un parametro con el texto a mostrar, si no viene usa un texto por defecto
+$Mensaje = if ($args.Count -gt 0) { $args[0] } else { "Recuerde guardar su informacion en el drive para su respaldo." }
+
+$RegPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+New-Item -Path $RegPath -Force | Out-Null
+Set-ItemProperty -Path $RegPath -Name "legalnoticecaption" -Type String -Value "Aviso Importante"
+Set-ItemProperty -Path $RegPath -Name "legalnoticetext" -Type String -Value $Mensaje
+
+# despues de establecer el mensaje, cierra la sesion (forzando cerrar las aplicaciones)
+shutdown /l /f
