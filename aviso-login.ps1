@@ -3,9 +3,8 @@
 $Mensaje = if ($args.Count -gt 0) { $args[0] } else { "Recuerde guardar su informacion en el drive para su respaldo." }
 
 $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
-New-Item -Path $RegPath -Force | Out-Null
-Set-ItemProperty -Path $RegPath -Name "legalnoticecaption" -Type String -Value "Aviso Importante"
-Set-ItemProperty -Path $RegPath -Name "legalnoticetext" -Type String -Value $Mensaje
+New-ItemProperty -Path $RegPath -Name "legalnoticecaption" -PropertyType String -Value "Aviso Importante" -Force
+New-ItemProperty -Path $RegPath -Name "legalnoticetext" -PropertyType String -Value $Mensaje -Force
 
 # ahora cierra todas las sesiones
 $sesiones = quser 2>$null | Select-Object -Skip 1
