@@ -1,0 +1,35 @@
+# Este script detener el servicio del agente Cloud, renombrar el archivo de tareas y levanta el servicio nuevamente
+
+# detiene el servicio
+Stop-Service -Name "FWASvc" -Force -ErrorAction Stop
+
+# espera hasta que el servicio se detenga. verifica que el servicio exista, y un maximo de intentos para evitar loop infinito.
+$maxIntentos = 30
+$intento = 0
+while ($true) {
+    $servicioObj = Get-Service -Name "FWASvc" -ErrorAction SilentlyContinue
+
+    if (-not $servicioObj) {
+        Write-Error "El servicio no existe"
+        break
+    }
+
+    # Se detuvo, seguimos
+    if ($servicioObj.Status -eq "Stopped") {
+        break
+    }
+
+    if ($intento -ge $maxIntentos) {
+        Write-Error "Se alcanzó el máximo de intentos"
+        break
+    }
+
+    Start-Sleep -Seconds 1
+    $intento++
+}
+
+# renombra el archivo
+Rename-Item -Path "C:\ProgramData\Faronics\StorageSpace\FWA\Tasks.dat" -NewName "C:\ProgramData\Faronics\StorageSpace\FWA\Tasks.old" -Force
+
+#start
+Start-Service -Name "FWASvc"
