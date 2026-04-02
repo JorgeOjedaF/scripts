@@ -7,8 +7,8 @@ sc stop "FWASvc"
 # espera hasta que el servicio se detenga. verifica que el servicio exista, y un maximo de intentos para evitar loop infinito.
 $maxIntentos = 30
 $intento = 0
+$servicioObj = Get-Service -Name "FWASvc" -ErrorAction SilentlyContinue
 while ($true) {
-    $servicioObj = Get-Service -Name "FWASvc" -ErrorAction SilentlyContinue
 
     if (-not $servicioObj) {
         Write-Error "El servicio no existe"
@@ -27,6 +27,7 @@ while ($true) {
 
     Start-Sleep -Seconds 1
     $intento++
+    $servicioObj.Refresh()
 }
 
 # renombra el archivo
