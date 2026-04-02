@@ -1,4 +1,4 @@
-# Este script detener el servicio del agente Cloud, renombrar el archivo de tareas y levanta el servicio nuevamente
+# Este script detiene el servicio del agente Cloud, renombra el archivo de tareas y levanta el servicio nuevamente
 
 # detiene el servicio
 Stop-Service -Name "FWASvc" -Force -ErrorAction Stop
@@ -29,7 +29,7 @@ while ($true) {
 }
 
 # renombra el archivo
-Rename-Item -Path "C:\ProgramData\Faronics\StorageSpace\FWA\Tasks.dat" -NewName "C:\ProgramData\Faronics\StorageSpace\FWA\Tasks.old" -Force
+Move-Item -Path "C:\ProgramData\Faronics\StorageSpace\FWA\Tasks.dat" -Destination "C:\ProgramData\Faronics\StorageSpace\FWA\Tasks.old" -Force
 
 #start
 Start-Service -Name "FWASvc"
