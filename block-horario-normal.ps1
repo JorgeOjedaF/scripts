@@ -1,0 +1,1 @@
+net user User /time:M-F,08:00-17:00
