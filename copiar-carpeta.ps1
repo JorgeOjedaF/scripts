@@ -1,4 +1,4 @@
-# esto recibe 2 parametros, por ejemplo https://raw.githubusercontent.com/JorgeOjedaF/scripts/refs/heads/main/copiar-carpeta.ps1
+# esto recibe 2 parametros, por ejemplo \\vmware-host\sharedfolders\Jorge\excel C:\excel
 
 # Nombre o IP del servidor
 $Origen = $args[0]
