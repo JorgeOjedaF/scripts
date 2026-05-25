@@ -1,3 +1,5 @@
+# esto recibe 2 parametros, por ejemplo https://raw.githubusercontent.com/JorgeOjedaF/scripts/refs/heads/main/copiar-carpeta.ps1
+
 # Nombre o IP del servidor
 $Origen = $args[0]
 
