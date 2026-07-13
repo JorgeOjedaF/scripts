@@ -5,6 +5,8 @@ xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout">
 <DefaultLayoutOverride>
     <StartLayoutCollection>
         <defaultlayout:StartLayout>
+                <start:Group Name="Default">
+                </start:Group>
         </defaultlayout:StartLayout>
     </StartLayoutCollection>
 </DefaultLayoutOverride>
