@@ -1,14 +1,20 @@
-# Ejecutar como Administrador
+$Path = "C:\ProgramData\StartLayout.json"
 
-$Url = "https://raw.githubusercontent.com/JorgeOjedaF/scripts/refs/heads/main/StartLayout.xml"
-$Path = "$env:TEMP\StartLayout.xml"
+@'
+{
+  "pinnedList": []
+}
+'@ | Out-File $Path -Encoding utf8
 
-# Descargar archivo XML
-Invoke-WebRequest -Uri $Url -OutFile $Path
 
-# Aplicar layout del menú Inicio
-Import-StartLayout -LayoutPath $Path -MountPath C:\
+$RegPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer"
 
-# Reiniciar Explorer para aplicar cambios
-Stop-Process -Name explorer -Force
-Start-Process explorer.exe
+New-Item -Path $RegPath -Force | Out-Null
+
+Set-ItemProperty `
+    -Path $RegPath `
+    -Name "ConfigureStartPins" `
+    -Value $Path
+
+
+Stop-Process -Name StartMenuExperienceHost -Force
