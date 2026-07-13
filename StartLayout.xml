@@ -1,0 +1,12 @@
+<LayoutModificationTemplate
+xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification"
+xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout">
+
+<DefaultLayoutOverride>
+    <StartLayoutCollection>
+        <defaultlayout:StartLayout>
+        </defaultlayout:StartLayout>
+    </StartLayoutCollection>
+</DefaultLayoutOverride>
+
+</LayoutModificationTemplate>
