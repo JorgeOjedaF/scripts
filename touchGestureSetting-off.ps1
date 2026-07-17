@@ -3,7 +3,11 @@
 
 # Busca en todos los usuarios, para no hacerlo "HKCU" pues el script corre normalmente como SYSTEM ACCOUNT
 Get-ChildItem Registry::HKEY_USERS |
-Where-Object { $_.PSChildName -match '^S-1-5-21-' } |
+Where-Object { $_.PSChildName -match '^S-1-5-21-.+-\d+$' } |
 ForEach-Object {
-    New-ItemProperty -Path "$($_.PSPath)\Control Panel\Desktop" -Name "TouchGestureSetting" -Value 0 -PropertyType DWord -Force | Out-Null
+    $Path = "$($_.PSPath)\Control Panel\Desktop"
+
+    if (Test-Path $Path) {
+        New-ItemProperty -Path $Path -Name "TouchGestureSetting" -Value 0 -PropertyType DWord -Force | Out-Null
+    }
 }
