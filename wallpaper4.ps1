@@ -67,9 +67,17 @@ New-ItemProperty -Path $RegKeyPath -Name $DesktopUrl -Value $DesktopImageValue -
 RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters 1,True
 
 # Cierra la sesion para refrescar el fondo
-$active = quser | Where-Object { $_ -match '\sActive\s' }
+$quser = Get-Command quser -ErrorAction SilentlyContinue
 
-if ($active) {
-    $sessionId = ($active -split '\s+')[2]
-    logoff $sessionId
+if ($quser) {
+    $active = quser | Where-Object { $_ -match '\sActive\s' }
+
+    if ($active) {
+        $sessionId = ($active -split '\s+')[2]
+        logoff $sessionId
+    }
+}
+else {
+    # Windows Home: cerrar la sesión actual
+    logoff
 }
