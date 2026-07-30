@@ -78,6 +78,16 @@ if ($quser) {
     }
 }
 else {
-    # Windows Home: cerrar la sesión actual
-    logoff
+    # Cierra la sesión para refrescar el fondo
+    $logoff = "$env:SystemRoot\System32\logoff.exe"
+
+    # Si existe logoff.exe, cerrar sesión actual
+    if (Test-Path $logoff) {
+        & $logoff
+
+    }
+    else {
+        # Si no existe logoff.exe (ej. Windows 11 Home), reiniciar equipo
+        shutdown.exe /r /f /t 0
+    }
 }
