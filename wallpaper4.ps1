@@ -22,7 +22,31 @@ $directory = "C:\Fondo"
 New-Item -Path $directory -ItemType Directory -Force | Out-Null
 
 # Obtener el nombre del archivo desde la URL
-$fileName = Split-Path $url -Leaf
+# Nombre por defecto
+$fileName = "fondo.jpg"
+
+try {
+    # Obtiene la última parte de la URL
+    $leaf = Split-Path ([System.Uri]$url).AbsolutePath -Leaf
+
+    # Verifica si parece un nombre de archivo (tiene extensión)
+    if ($leaf -and $leaf -match '\.[A-Za-z0-9]{2,5}$') {
+        $fileName = $leaf
+    }
+    else {
+        # Consulta los encabezados HTTP
+        $response = Invoke-WebRequest -Uri $url -Method Head -ErrorAction Stop
+
+        $contentDisposition = $response.Headers["Content-Disposition"]
+
+        if ($contentDisposition -match 'filename="?([^";]+)"?') {
+            $fileName = $matches[1]
+        }
+    }
+}
+catch {
+    # Si ocurre cualquier error, conserva el nombre por defecto "fondo.jpg"
+}
 $DesktopImageValue = Join-Path $directory $fileName
 
 # Descargar la imagen
