@@ -1,25 +1,38 @@
 Add-Type -AssemblyName System.Runtime.WindowsRuntime
 
-# Cargar el tipo WinRT
-$Geolocator = [Windows.Devices.Geolocation.Geolocator, Windows.Devices.Geolocation, ContentType = WindowsRuntime]
+$locator = New-Object 'Windows.Devices.Geolocation.Geolocator'
 
-# Crear Geolocator
-$locator = $Geolocator::new()
+try {
+    # Permitir utilizar una ubicación almacenada de hasta 24 horas
+    $maximumAge = [TimeSpan]::FromHours(24)
 
-# Solicitar ubicación
-$operation = $locator.GetGeopositionAsync()
+    # Tiempo máximo para obtener una ubicación nueva
+    $timeout = [TimeSpan]::FromSeconds(10)
 
-# Obtener el tipo concreto de la operación
-$task = [System.WindowsRuntimeSystemExtensions]::AsTask(
-    [Windows.Foundation.IAsyncOperation[Windows.Devices.Geolocation.Geoposition]]$operation
-)
+    $operation = $locator.GetGeopositionAsync($maximumAge, $timeout)
 
-# Esperar resultado
-$position = $task.GetAwaiter().GetResult()
+    # Esperar hasta que termine la operación
+    while ($operation.Status -eq 0) {
+        Start-Sleep -Milliseconds 100
+    }
 
-# Mostrar datos
-$coordinate = $position.Coordinate
+    # Obtener el resultado
+    $position = $operation.GetResults()
 
-Write-Host "Latitude:  $($coordinate.Point.Position.Latitude)"
-Write-Host "Longitude: $($coordinate.Point.Position.Longitude)"
-Write-Host "Timestamp: $($coordinate.Timestamp)"
+    if ($null -eq $position) {
+        Write-Host "No se obtuvo ninguna ubicación."
+        exit
+    }
+
+    $coordinate = $position.Coordinate
+
+    Write-Host ""
+    Write-Host "Latitud:   $($coordinate.Point.Position.Latitude)"
+    Write-Host "Longitud:  $($coordinate.Point.Position.Longitude)"
+    Write-Host "Precision: $($coordinate.Accuracy) metros"
+    Write-Host "Timestamp: $($coordinate.Timestamp)"
+}
+catch {
+    Write-Host "Error:"
+    Write-Host $_.Exception.Message
+}
