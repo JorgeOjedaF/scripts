@@ -2,20 +2,15 @@ Add-Type -AssemblyName System.Runtime.WindowsRuntime
 
 $geolocator = [Windows.Devices.Geolocation.Geolocator, Windows.Devices.Geolocation, ContentType = WindowsRuntime]::new()
 
-$geolocator.DesiredAccuracy = [Windows.Devices.Geolocation.PositionAccuracy]::Default
-$geolocator.ReportInterval = 0
-
 try {
     $operation = $geolocator.GetGeopositionAsync()
 
-    $task = [System.WindowsRuntimeSystemExtensions]::AsTask($operation)
+    $result = [System.WindowsRuntimeSystemExtensions]::GetAwaiter($operation).GetResult()
 
-    $position = $task.Result
-
-    $latitude = $position.Coordinate.Point.Position.Latitude
-    $longitude = $position.Coordinate.Point.Position.Longitude
-    $accuracy = $position.Coordinate.Accuracy
-    $timestamp = $position.Coordinate.Timestamp
+    $latitude  = $result.Coordinate.Point.Position.Latitude
+    $longitude = $result.Coordinate.Point.Position.Longitude
+    $accuracy = $result.Coordinate.Accuracy
+    $timestamp = $result.Coordinate.Timestamp
 
     Write-Host "Latitud:   $latitude"
     Write-Host "Longitud:  $longitude"
