@@ -1,0 +1,7 @@
+
+if ($args.Count -gt 0) {
+  dir $args[0]
+} else {
+  # No hay argumentos, hace un dir en la carpeta actual
+  Dir
+}
