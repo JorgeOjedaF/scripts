@@ -27,7 +27,7 @@ if ($watcher.Status -eq "Ready") {
     else {
         Write-Host "Latitud:   $($location.Latitude)"
         Write-Host "Longitud:  $($location.Longitude)"
-        Write-Host "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude"
+        Write-Host "https://www.google.com/maps/search/?api=1&query=$($location.Latitude),$($location.longitude)"
     }
 
 }
