@@ -1,30 +1,35 @@
-Add-Type -AssemblyName System.Runtime.WindowsRuntime
+Add-Type -AssemblyName System.Device
 
-$locator = [Windows.Devices.Geolocation.Geolocator, Windows.Devices.Geolocation, ContentType = WindowsRuntime]::new()
+$watcher = New-Object System.Device.Location.GeoCoordinateWatcher
 
-try {
-    $operation = $locator.GetGeopositionAsync(
-        [TimeSpan]::FromMinutes(10),
-        [TimeSpan]::FromSeconds(15)
-    )
+# Iniciar el servicio de ubicación
+$watcher.Start()
 
-    $task = [System.WindowsRuntimeSystemExtensions]::AsTask(
-        [Windows.Foundation.IAsyncOperation[Windows.Devices.Geolocation.Geoposition]]$operation
-    )
+# Esperar hasta que Windows tenga una posición
+$timeout = 30
+$elapsed = 0
 
-    $position = $task.Result
-
-    $latitude  = $position.Coordinate.Point.Position.Latitude
-    $longitude = $position.Coordinate.Point.Position.Longitude
-    $accuracy  = $position.Coordinate.Accuracy
-    $timestamp = $position.Coordinate.Timestamp
-
-    Write-Host "Latitude:  $latitude"
-    Write-Host "Longitude: $longitude"
-    Write-Host "Accuracy:  $accuracy meters"
-    Write-Host "Timestamp: $timestamp"
+while ($watcher.Status -eq "NoData" -and $elapsed -lt $timeout) {
+    Start-Sleep -Seconds 1
+    $elapsed++
 }
-catch {
-    Write-Host "ERROR 1:"
-    Write-Host $_.Exception.ToString()
+
+if ($watcher.Status -eq "Ready") {
+
+    $location = $watcher.Position.Location
+
+    if ($location.IsUnknown) {
+        Write-Host "Windows no tiene una ubicación disponible."
+    }
+    else {
+        Write-Host "Latitud:   $($location.Latitude)"
+        Write-Host "Longitud:  $($location.Longitude)"
+    }
+
 }
+else {
+    Write-Host "No se pudo obtener la ubicación."
+    Write-Host "Status: $($watcher.Status)"
+}
+
+$watcher.Stop()
