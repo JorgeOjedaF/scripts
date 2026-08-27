@@ -17,7 +17,7 @@ $locationMachine = (Get-ItemProperty `
 Write-Host "Location Services (Machine): $locationMachine"
 Write-Host "Location Services (User):    $locationUser"
 
-<%
+<#
 # Si no estaba habilitado, se habilita
 $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location"
 $current = (Get-ItemProperty -Path $path -Name "Value" -ErrorAction SilentlyContinue).Value
@@ -30,7 +30,7 @@ else {
     Write-Host "Location Services ya estaba habilitado."
 }
 
-%>
+#>
 
 # Iniciar el servicio de ubicación
 $watcher.Start()
