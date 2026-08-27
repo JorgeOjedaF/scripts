@@ -5,32 +5,17 @@ Add-Type -AssemblyName System.Device
 
 $watcher = New-Object System.Device.Location.GeoCoordinateWatcher
 
-$locationUser = (Get-ItemProperty `
-    -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" `
-    -Name Value -ErrorAction SilentlyContinue).Value
-
-$locationMachine = (Get-ItemProperty `
-    -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" `
-    -Name Value -ErrorAction SilentlyContinue).Value
-
-# Location Services debe tener el valor "Allow" para que este habilitado."
-Write-Host "Location Services (Machine): $locationMachine"
-Write-Host "Location Services (User):    $locationUser"
-
-<#
-# Si no estaba habilitado, se habilita
+# determina si esta habilitado Location en el equipo
 $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location"
-$current = (Get-ItemProperty -Path $path -Name "Value" -ErrorAction SilentlyContinue).Value
-if ($current -ne "Allow") {
+$valor = (Get-ItemProperty -Path $path -Name "Value" -ErrorAction SilentlyContinue).Value
+Write-Host "Location Services: $valor"
+
+# Si no estaba habilitado, se habilita
+if ($valor -ne "Allow") {
     New-Item -Path $path -Force | Out-Null
     Set-ItemProperty -Path $path -Name "Value" -Value "Allow"
     Write-Host "Location Services no estaba habilitado y se habilito"
 }
-else {
-    Write-Host "Location Services ya estaba habilitado."
-}
-
-#>
 
 # Iniciar el servicio de ubicación
 $watcher.Start()
