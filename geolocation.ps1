@@ -12,7 +12,8 @@ $watcher.Start()
 $timeout = 30
 $elapsed = 0
 
-while ($watcher.Status -eq "NoData" -and $elapsed -lt $timeout) {
+while ($watcher.Status -ne "Ready" -and $elapsed -lt $timeout) {
+    Write-Host "Esperando ubicación... Status: $($watcher.Status)"
     Start-Sleep -Seconds 1
     $elapsed++
 }
