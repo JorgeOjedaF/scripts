@@ -3,8 +3,6 @@
 
 Add-Type -AssemblyName System.Device
 
-$watcher = New-Object System.Device.Location.GeoCoordinateWatcher
-
 # determina si esta habilitado Location en el equipo
 $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location"
 $valor = (Get-ItemProperty -Path $path -Name "Value" -ErrorAction SilentlyContinue).Value
@@ -18,6 +16,7 @@ if ($valor -ne "Allow") {
 }
 
 # Iniciar el servicio de ubicación
+$watcher = New-Object System.Device.Location.GeoCoordinateWatcher
 $watcher.Start()
 
 # Esperar hasta que el servicio esta listo o sale despues del timeout
