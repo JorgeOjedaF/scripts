@@ -20,8 +20,8 @@ if ($valor -ne "Allow") {
 # Iniciar el servicio de ubicación
 $watcher.Start()
 
-# Esperar hasta que Windows tenga una posición
-$timeout = 30
+# Esperar hasta que el servicio esta listo o sale despues del timeout
+$timeout = 60
 $elapsed = 0
 
 while ($watcher.Status -ne "Ready" -and $elapsed -lt $timeout) {
