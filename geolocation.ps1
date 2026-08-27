@@ -25,12 +25,13 @@ $timeout = 30
 $elapsed = 0
 
 while ($watcher.Status -ne "Ready" -and $elapsed -lt $timeout) {
-    Write-Host "Esperando ubicacion... Status: $($watcher.Status)"
+    Write-Host "Esperando que servicio location este listo. (Watcher.Status: $($watcher.Status) )"
     Start-Sleep -Seconds 1
     $elapsed++
 }
 
 if ($watcher.Status -eq "Ready") {
+    Write-Host "Servicio location (Watcher.Status: $($watcher.Status)"
 
     $location = $watcher.Position.Location
 
