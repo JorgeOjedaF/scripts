@@ -32,7 +32,7 @@ if ($watcher.Status -eq "Ready") {
 
 }
 else {
-    Write-Host "No se pudo obtener la ubicación."
+    Write-Host "No se pudo obtener la ubicacion. $($elapsed)"
     Write-Host "Status: $($watcher.Status)"
 }
 
