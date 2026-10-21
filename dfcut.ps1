@@ -23,7 +23,8 @@ try {
     "PID: $($p.Id)" |
         Out-File "$env:TEMP\ejecucion.log" -Append
 
-    Wait-Process -Id $p.Id -Timeout 60 -ErrorAction Stop
+    # espera 6 minutos
+    Wait-Process -Id $p.Id -Timeout 360 -ErrorAction Stop
 
     $p.Refresh()
     "Terminado: $(Get-Date), ExitCode: $($p.ExitCode)" |
