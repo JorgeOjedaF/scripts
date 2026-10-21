@@ -13,10 +13,24 @@ Invoke-WebRequest -Uri $url -OutFile $zip -ErrorAction Stop
 Expand-Archive -Path $zip -DestinationPath $destino -Force -ErrorAction Stop
 
 # Verificar y ejecutar el EXE
-if (Test-Path $exe) {
-    Write-Host "Start-Process"
-    Start-Process -FilePath $exe -Wait
-    Write-Host "ok"
-} else {
-    throw "No se encontró DeepFreezeCleanUp.exe en la ubicación esperada: $exe"
+Write-Host "Start-Process"
+
+"Inicio: $(Get-Date)" |
+    Out-File "$env:TEMP\ejecucion.log" -Append
+
+try {
+    $p = Start-Process -FilePath $exe -PassThru -ErrorAction Stop
+    "PID: $($p.Id)" |
+        Out-File "$env:TEMP\ejecucion.log" -Append
+
+    Wait-Process -Id $p.Id -Timeout 60 -ErrorAction Stop
+
+    $p.Refresh()
+    "Terminado: $(Get-Date), ExitCode: $($p.ExitCode)" |
+        Out-File "$env:TEMP\ejecucion.log" -Append
+}
+catch {
+    Write-Host "error: $($_.Exception.Message)"
+    "Error: $(Get-Date) - $($_.Exception.Message)" |
+        Out-File "$env:TEMP\ejecucion.log" -Append
 }
