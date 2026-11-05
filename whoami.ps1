@@ -1,0 +1,3 @@
+whoami
+$env:USERPROFILE
+$env:LOCALAPPDATA
