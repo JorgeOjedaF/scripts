@@ -99,6 +99,5 @@ $Report = foreach ($Update in @($Installed) + @($Pending)) {
 
 # Mostrar resultados
 $Report |
-    Sort-Object Status, Title |
-    Format-Table Title, ReleaseDate, InstallDate, Category,
-                 Status, ErrorCode, FailureReason -AutoSize
+    Select-Object Title, ReleaseDate, InstallDate, Category,
+                 Status, ErrorCode, FailureReason | Format-List
