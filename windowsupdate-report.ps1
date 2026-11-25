@@ -247,7 +247,8 @@ $Report |
     Format-Table KB, Status, InstallDate, Category -AutoSize
 
 # 9. Exportar CSV
-$CSV = "$env:USERPROFILE\Desktop\WindowsUpdate_reporte.csv"
+mkdir C:\reporteWU;
+$CSV = "C:\reporteWU\WindowsUpdate_reporte.csv"
 
 $Report |
     Sort-Object Title |
